@@ -1,6 +1,5 @@
 <?php
-$success = true;
-$results = array();
+$success = array();
 if ($object && $pluginid= $object->get('id')) {
     switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         case xPDOTransport::ACTION_INSTALL:

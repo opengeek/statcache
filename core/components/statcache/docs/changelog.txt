@@ -1,5 +1,7 @@
 Changelog for statcache.
 
+- Fix resolver for Plugin Events always reporting false
+
 statcache 1.0.0-pl (August 24, 2012)
 ====================================
 - Initial release.
