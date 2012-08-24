@@ -1,0 +1,5 @@
+Changelog for statcache.
+
+statcache 1.0.0-pl (August 24, 2012)
+====================================
+- Initial release.
