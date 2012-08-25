@@ -17,7 +17,8 @@ switch ($modx->event->name) {
             /* skip Resources with a non-empty value for the specified TV */
             if (!empty($skipTV) && $modx->resource->getTVValue($skipTV)) break;
             /* do not cache if the cacheable content still contains unprocessed tags */
-            if (!empty($skipIfTagsRemain) && $modx->parser->collectElementTags($modx->resource->_content, $matches = array())) break;
+            $matches = array();
+            if (!empty($skipIfTagsRemain) && $modx->parser->collectElementTags($modx->resource->_content, $matches)) break;
             /* build the path/filename for writing the static representation */
             $statcacheFile = $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache');
             if ($modx->resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
