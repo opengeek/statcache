@@ -1,5 +1,7 @@
 Changelog for statcache.
 
+statcache 1.1.0-pl (August 25, 2012)
+====================================
 - Add skipTV property for skipping by a TV
 - Add skipIfTagsRemain property for skipping Resources with non-cacheable tags
 - Fix resolver for Plugin Events always reporting false
