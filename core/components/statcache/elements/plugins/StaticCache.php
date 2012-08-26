@@ -14,6 +14,8 @@ switch ($modx->event->name) {
     case 'OnBeforeSaveWebPageCache':
         /* Write a static version of the file before caching it in MODX */
         if ($modx->resource->get('cacheable') && $modx->resource->_output != '') {
+            /* optionally skip binary content types */
+            if (!empty($skipBinaryContentTypes) && $modx->resource->ContentType->get('binary')) break;
             /* skip Resources with a non-empty value for the specified TV */
             if (!empty($skipTV) && $modx->resource->getTVValue($skipTV)) break;
             /* do not cache if the cacheable content still contains unprocessed tags */

@@ -1,5 +1,7 @@
 Changelog for statcache.
 
+- Add skipBinaryContentTypes for skipping Resources with binary Content
+
 statcache 1.1.0-pl (August 25, 2012)
 ====================================
 - Add skipTV property for skipping by a TV

@@ -17,6 +17,13 @@ $properties = array(
         'options' => '',
         'value' => '',
     ),
+    array(
+        'name' => 'skipBinaryContentTypes',
+        'desc' => 'Skip Resources that have a binary Content Type.',
+        'type' => 'combo-boolean',
+        'options' => '',
+        'value' => false,
+    ),
 );
 
 return $properties;
