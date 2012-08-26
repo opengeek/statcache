@@ -1,5 +1,6 @@
 Changelog for statcache.
 
+- Add ability to limit caching by Resource mime-type
 - Add skipBinaryContentTypes for skipping Resources with binary Content
 
 statcache 1.1.0-pl (August 25, 2012)

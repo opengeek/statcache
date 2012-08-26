@@ -21,6 +21,11 @@ switch ($modx->event->name) {
             /* do not cache if the cacheable content still contains unprocessed tags */
             $matches = array();
             if (!empty($skipIfTagsRemain) && $modx->parser->collectElementTags($modx->resource->_content, $matches)) break;
+            /* if specified, limit caching by mime-type */
+            if (!empty($mimeTypes)) {
+                $validMimeTypes = array_walk(explode(',', strtolower($mimeTypes)), 'trim');
+                if (!in_array(strtolower($modx->resource->ContentType->get('mime_type')), $validMimeTypes)) break;
+            }
             /* build the path/filename for writing the static representation */
             $statcacheFile = $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache');
             if ($modx->resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {

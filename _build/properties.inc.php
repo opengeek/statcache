@@ -24,6 +24,13 @@ $properties = array(
         'options' => '',
         'value' => false,
     ),
+    array(
+        'name' => 'mimeTypes',
+        'desc' => 'If specified and non-empty, only cache Resources with the specified mime-types. Accepts a comma-delimited list of mime-types.',
+        'type' => 'textfield',
+        'options' => '',
+        'value' => '',
+    ),
 );
 
 return $properties;
