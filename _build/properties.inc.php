@@ -31,6 +31,13 @@ $properties = array(
         'options' => '',
         'value' => '',
     ),
+    array(
+        'name' => 'contentTypes',
+        'desc' => 'If specified and non-empty, only cache Resources with the specified ContentType id\'s. Accepts a comma-delimited list of ContentType id\'s.',
+        'type' => 'textfield',
+        'options' => '',
+        'value' => '',
+    ),
 );
 
 return $properties;

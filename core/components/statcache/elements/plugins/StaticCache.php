@@ -26,6 +26,11 @@ switch ($modx->event->name) {
                 $validMimeTypes = array_walk(explode(',', strtolower($mimeTypes)), 'trim');
                 if (!in_array(strtolower($modx->resource->ContentType->get('mime_type')), $validMimeTypes)) break;
             }
+            /* if specified, limit caching by ContentTypes */
+            if (!empty($contentTypes)) {
+                $validContentTypes = array_walk(explode(',', $contentTypes), 'trim');
+                if (!in_array($modx->resource->ContentType->get('id'), $validContentTypes)) break;
+            }
             /* build the path/filename for writing the static representation */
             $statcacheFile = $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache');
             if ($modx->resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
