@@ -1,5 +1,6 @@
 Changelog for statcache.
 
+- Change skipIfTagsRemain and skipBinaryContentTypes default to true
 - Only cache published Resources
 - Add ability to limit caching by ContentType id's
 - Add ability to limit caching by Resource mime-type

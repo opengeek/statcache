@@ -8,7 +8,7 @@ $properties = array(
         'desc' => 'Skip Resources that have tags remaining in the content that is being cached for the Resource.',
         'type' => 'combo-boolean',
         'options' => '',
-        'value' => false,
+        'value' => true,
     ),
     array(
         'name' => 'skipTV',
@@ -22,7 +22,7 @@ $properties = array(
         'desc' => 'Skip Resources that have a binary Content Type.',
         'type' => 'combo-boolean',
         'options' => '',
-        'value' => false,
+        'value' => true,
     ),
     array(
         'name' => 'mimeTypes',
