@@ -13,12 +13,24 @@ switch ($modx->event->name) {
         break;
     case 'OnBeforeSaveWebPageCache':
         /* Write a static version of the file before caching it in MODX */
-        if ($modx->resource->get('cacheable') && $modx->resource->_output != '') {
+        if ($modx->resource->get('cacheable') && $modx->resource->get('published') && $modx->resource->_output != '') {
+            /* optionally skip binary content types */
+            if (!empty($skipBinaryContentTypes) && $modx->resource->ContentType->get('binary')) break;
             /* skip Resources with a non-empty value for the specified TV */
             if (!empty($skipTV) && $modx->resource->getTVValue($skipTV)) break;
             /* do not cache if the cacheable content still contains unprocessed tags */
             $matches = array();
             if (!empty($skipIfTagsRemain) && $modx->parser->collectElementTags($modx->resource->_content, $matches)) break;
+            /* if specified, limit caching by mime-type */
+            if (!empty($mimeTypes)) {
+                $validMimeTypes = array_walk(explode(',', strtolower($mimeTypes)), 'trim');
+                if (!in_array(strtolower($modx->resource->ContentType->get('mime_type')), $validMimeTypes)) break;
+            }
+            /* if specified, limit caching by ContentTypes */
+            if (!empty($contentTypes)) {
+                $validContentTypes = array_walk(explode(',', $contentTypes), 'trim');
+                if (!in_array($modx->resource->ContentType->get('id'), $validContentTypes)) break;
+            }
             /* build the path/filename for writing the static representation */
             $statcacheFile = $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache');
             if ($modx->resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
