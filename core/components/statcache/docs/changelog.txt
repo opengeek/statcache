@@ -1,5 +1,7 @@
 Changelog for statcache.
 
+statcache 1.2.0-pl (September 28, 2012)
+====================================
 - Change skipIfTagsRemain and skipBinaryContentTypes default to true
 - Only cache published Resources
 - Add ability to limit caching by ContentType id's

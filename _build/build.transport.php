@@ -12,7 +12,7 @@ set_time_limit(0);
 define('PKG_NAME', 'statcache');
 define('PKG_NAME_LOWER', strtolower(PKG_NAME));
 define('PKG_VERSION', '1.2.0');
-define('PKG_RELEASE', 'dev');
+define('PKG_RELEASE', 'pl');
 
 /* define sources */
 $root = dirname(dirname(__FILE__)) . '/';
