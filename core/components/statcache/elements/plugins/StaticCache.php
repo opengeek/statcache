@@ -3,7 +3,7 @@ switch ($modx->event->name) {
     case 'OnSiteRefresh':
         /* Remove all static files OnSiteRefresh */
         $modx->cacheManager->deleteTree(
-            $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache'),
+            $modx->getOption('core_path',null,MODX_CORE_PATH) . 'cache/' . $modx->getOption('statcache_path', $scriptProperties, 'statcache'),
             array(
                 'deleteTop' => false,
                 'skipDirs' => false,
@@ -32,7 +32,7 @@ switch ($modx->event->name) {
                 if (!in_array($modx->resource->ContentType->get('id'), $validContentTypes)) break;
             }
             /* build the path/filename for writing the static representation */
-            $statcacheFile = $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache');
+            $statcacheFile = $modx->getOption('core_path',null,MODX_CORE_PATH) . 'cache/' . $modx->getOption('statcache_path', $scriptProperties, 'statcache');
             if ($modx->resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
                 /* use ~index.html to represent the site_start Resource */
                 $statcacheFile .= MODX_BASE_URL . '~index.html';
@@ -54,7 +54,7 @@ switch ($modx->event->name) {
     case 'OnDocFormSave':
 		$modx->resource =& $resource;
 		/* build the path/filename for writing the static representation */
-        $statcacheFile = $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache');
+        $statcacheFile = $modx->getOption('core_path',null,MODX_CORE_PATH) . 'cache/' . $modx->getOption('statcache_path', $scriptProperties, 'statcache');
         if ($resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
             /* use ~index.html to represent the site_start Resource */
             $statcacheFile .= MODX_BASE_URL . '~index.html';
