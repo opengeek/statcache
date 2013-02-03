@@ -3,7 +3,7 @@ switch ($modx->event->name) {
     case 'OnSiteRefresh':
         /* Remove all static files OnSiteRefresh */
         $modx->cacheManager->deleteTree(
-            $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache'),
+            $modx->getOption('core_path',null,MODX_CORE_PATH) . 'cache/' . $modx->getOption('statcache_path', $scriptProperties, 'statcache'),
             array(
                 'deleteTop' => false,
                 'skipDirs' => false,
@@ -32,7 +32,7 @@ switch ($modx->event->name) {
                 if (!in_array($modx->resource->ContentType->get('id'), $validContentTypes)) break;
             }
             /* build the path/filename for writing the static representation */
-            $statcacheFile = $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache');
+            $statcacheFile = $modx->getOption('core_path',null,MODX_CORE_PATH) . 'cache/' . $modx->getOption('statcache_path', $scriptProperties, 'statcache');
             if ($modx->resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
                 /* use ~index.html to represent the site_start Resource */
                 $statcacheFile .= MODX_BASE_URL . '~index.html';
@@ -51,4 +51,32 @@ switch ($modx->event->name) {
             }
         }
         break;
+    case 'OnDocFormSave':
+		$modx->resource =& $resource;
+		/* build the path/filename for writing the static representation */
+		$url = $modx->makeUrl($resource->get('id'), '', '', 'full');
+        $statcacheFile = $modx->getOption('core_path',null,MODX_CORE_PATH) . 'cache/' . $modx->getOption('statcache_path', $scriptProperties, 'statcache');
+        if ($resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
+            /* use ~index.html to represent the site_start Resource */
+            $statcacheFile .= MODX_BASE_URL . '~index.html';
+        } else {
+        	// dirty switch to web context so the url is generated correctly
+			$modx->switchContext('web');
+            /* generate an absolute URI representation of the Resource to append to the statcache_path */
+            $uri = $modx->makeUrl($resource->get('id'), '', '', 'abs');
+			$modx->switchContext('mgr');
+            if (substr($uri, strlen($uri) - 1) === '/' && $resource->ContentType->get('mime_type') == 'text/html') {
+                /* if Resource is HTML and ends with a /, use ~index.html for the filename */
+                $uri .= '~index.html';
+            }
+            $statcacheFile .= $uri;
+        }
+        // delete cached file
+		if (file_exists($statcacheFile)) unlink($statcacheFile);
+		
+		if ($resource->get('published') == 1 && $resource->get('deleted') == 0 && $resource->get('cacheable') == 1) {
+			// let MODX create a new cached version by requesting the resource
+			@file_get_contents($url);
+		}
+		break;
 }
