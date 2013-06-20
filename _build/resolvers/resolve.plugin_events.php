@@ -14,12 +14,12 @@ if ($object && $pluginid= $object->get('id')) {
                     if ($event) {
                         $pluginEvent = $object->xpdo->getObject('modPluginEvent',array(
                             'pluginid' => $pluginid,
-                            'event' => $event->get('id'),
+                            'event' => $event->get('name'),
                         ));
                         if (!$pluginEvent) {
                             $pluginEvent= $object->xpdo->newObject('modPluginEvent');
                             $pluginEvent->set('pluginid', $pluginid);
-                            $pluginEvent->set('event', $event->get('id'));
+                            $pluginEvent->set('event', $event->get('name'));
                             $pluginEvent->set('priority', 0);
                             $pluginEvent->set('propertyset', 0);
                             $success[$eventName]= $pluginEvent->save();
