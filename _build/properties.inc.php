@@ -11,6 +11,13 @@ $properties = array(
         'value' => true,
     ),
     array(
+        'name' => 'cacheTV',
+        'desc' => 'Cache all Resources that have a non-empty value in the Template Variable specified by name. This overrides all other options; leave empty to use other options.',
+        'type' => 'textfield',
+        'options' => '',
+        'value' => '',
+    ),
+    array(
         'name' => 'skipTV',
         'desc' => 'Skip Resources that have a non-empty value in the Template Variable specified by name. Leave empty to only skip non-cacheable Resources.',
         'type' => 'textfield',
@@ -37,6 +44,13 @@ $properties = array(
         'type' => 'textfield',
         'options' => '',
         'value' => '',
+    ),
+    array(
+        'name' => 'regenerate',
+        'desc' => 'Regenerate static files instead of removing them when clearing site cache.',
+        'type' => 'combo-boolean',
+        'options' => '',
+        'value' => false,
     ),
 );
 

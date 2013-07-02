@@ -1,5 +1,11 @@
 Changelog for statcache.
 
+statcache 1.3.0-pl (July 2, 2013)
+====================================
+- Add regenerate property for replacing static files vs. removing
+- Add cacheTV property for forcing caching by TVs
+- Fix resolver for Plugin Events
+
 statcache 1.2.0-pl (September 28, 2012)
 ====================================
 - Change skipIfTagsRemain and skipBinaryContentTypes default to true
