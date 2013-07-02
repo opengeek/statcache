@@ -45,6 +45,13 @@ $properties = array(
         'options' => '',
         'value' => '',
     ),
+    array(
+        'name' => 'regenerate',
+        'desc' => 'Regenerate static files instead of removing them when clearing site cache.',
+        'type' => 'combo-boolean',
+        'options' => '',
+        'value' => false,
+    ),
 );
 
 return $properties;

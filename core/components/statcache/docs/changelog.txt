@@ -1,5 +1,6 @@
 Changelog for statcache.
 
+- Add regenerate property for replacing static files vs. removing
 - Add cacheTV property for forcing caching by TVs
 - Fix resolver for Plugin Events
 
