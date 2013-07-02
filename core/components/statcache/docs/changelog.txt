@@ -1,5 +1,6 @@
 Changelog for statcache.
 
+- Add cacheTV property for forcing caching by TVs
 - Fix resolver for Plugin Events
 
 statcache 1.2.0-pl (September 28, 2012)
