@@ -1,8 +1,8 @@
 --------------------
 Extra: statcache
 --------------------
-Version: 1.2.0-pl
-Released: September 28, 2012
+Version: 1.3.0-pl
+Released: July 2, 2013
 Since: August 24, 2012
 Author: Jason Coward <jason@modx.com>
 
