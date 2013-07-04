@@ -124,4 +124,34 @@ switch ($modx->event->name) {
             }
         }
         break;
+    case 'OnDocFormSave':
+        $modx->resource =& $resource;
+
+        /* build the path/filename for writing the static representation */
+        $statcacheFile = $modx->getOption('core_path',null,MODX_CORE_PATH) . 'cache/' . $modx->getOption('statcache_path', $scriptProperties, 'statcache');
+
+        // get context of resource and switch
+        $ctx = ($resource->get('context_key') ? $resource->get('context_key') : 'web');
+        $modx->switchContext($ctx);
+
+
+        if ($resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
+            /* use ~index.html to represent the site_start Resource */
+            $statcacheFile .= '/'.$modx->context->key . MODX_BASE_URL . '~index.html';
+        } else {
+            // dirty switch to web context so the url is generated correctly
+
+            /* generate an absolute URI representation of the Resource to append to the statcache_path */
+            $uri = '/'. $modx->context->key . MODX_BASE_URL . $modx->makeUrl($resource->get('id'), 'web', '', 'abs');
+
+            if (substr($uri, strlen($uri) - 1) === '/' && $resource->ContentType->get('mime_type') == 'text/html') {
+                /* if Resource is HTML and ends with a /, use ~index.html for the filename */
+                $uri .= '~index.html';
+            }
+            $statcacheFile .= $uri;
+        }
+        // switch back to mgr
+        $modx->switchContext('mgr');
+    if (file_exists($statcacheFile)) unlink($statcacheFile);
+    break;
 }
