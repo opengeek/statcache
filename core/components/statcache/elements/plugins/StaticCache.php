@@ -139,10 +139,9 @@ switch ($modx->event->name) {
             /* use ~index.html to represent the site_start Resource */
             $statcacheFile .= '/'.$modx->context->key . MODX_BASE_URL . '~index.html';
         } else {
-            // dirty switch to web context so the url is generated correctly
 
             /* generate an absolute URI representation of the Resource to append to the statcache_path */
-            $uri = '/'. $modx->context->key . MODX_BASE_URL . $modx->makeUrl($resource->get('id'), 'web', '', 'abs');
+            $uri = '/'. $modx->context->key . MODX_BASE_URL . $modx->makeUrl($resource->get('id'), $modx->context->key, '', 'abs');
 
             if (substr($uri, strlen($uri) - 1) === '/' && $resource->ContentType->get('mime_type') == 'text/html') {
                 /* if Resource is HTML and ends with a /, use ~index.html for the filename */
@@ -150,8 +149,30 @@ switch ($modx->event->name) {
             }
             $statcacheFile .= $uri;
         }
+
+        if (file_exists($statcacheFile)) unlink($statcacheFile);
+
+        if (!empty($regenerate)) {
+            if ($resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
+                $absLink = ($modx->getOption('site_url') ? $modx->getOption('site_url') : MODX_HTTP_HOST ).'/';
+            } else {
+                $absLink = ($modx->getOption('site_url') ? $modx->getOption('site_url') : MODX_HTTP_HOST ).'/'.$modx->makeUrl($resource->get('id'));
+            }
+
+            set_time_limit(0);
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_USERAGENT, 'MODX RegenCache');
+            curl_setopt($curl, CURLOPT_FAILONERROR, false);
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_NOBODY, true);
+            curl_setopt($curl, CURLOPT_URL, $absLink);
+            curl_exec($curl);
+            curl_close($curl);
+
+        }
+
         // switch back to mgr
         $modx->switchContext('mgr');
-    if (file_exists($statcacheFile)) unlink($statcacheFile);
     break;
 }
