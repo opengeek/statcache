@@ -52,6 +52,13 @@ $properties = array(
         'options' => '',
         'value' => false,
     ),
+    array(
+        'name' => 'regenerateSinglePage',
+        'desc' => 'Regenerate static file after a resource has been updated.',
+        'type' => 'combo-boolean',
+        'options' => '',
+        'value' => false,
+    ),
 );
 
 return $properties;

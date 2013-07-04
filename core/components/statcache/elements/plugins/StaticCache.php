@@ -152,7 +152,7 @@ switch ($modx->event->name) {
 
         if (file_exists($statcacheFile)) unlink($statcacheFile);
 
-        if (!empty($regenerate)) {
+        if (!empty($regenerateSinglePage)) {
             if ($resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
                 $absLink = ($modx->getOption('site_url') ? $modx->getOption('site_url') : MODX_HTTP_HOST ).'/';
             } else {
