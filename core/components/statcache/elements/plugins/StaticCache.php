@@ -107,7 +107,8 @@ switch ($modx->event->name) {
             $statcacheFile = $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache');
             if ($modx->resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
                 /* use ~index.html to represent the site_start Resource */
-                $statcacheFile .= MODX_BASE_URL . '~index.html';
+                $statcacheFile .=  '/'.$modx->context->key . MODX_BASE_URL .'~index.html';
+                // $statcacheFile .= MODX_BASE_URL . '~index.html';
             } else {
                 /* generate an absolute URI representation of the Resource to append to the statcache_path */
                 $uri = $modx->makeUrl($modx->resource->get('id'), '', '', 'abs');
