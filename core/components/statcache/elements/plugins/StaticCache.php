@@ -112,7 +112,7 @@ switch ($modx->event->name) {
                     // $statcacheFile .= MODX_BASE_URL . '~index.html';
                 } else {
                     /* generate an absolute URI representation of the Resource to append to the statcache_path */
-                    $uri = $modx->makeUrl($modx->resource->get('id'), '', '', 'abs');
+                    $uri = '/'.$modx->context->key . MODX_BASE_URL . $modx->makeUrl($modx->resource->get('id'), '', '', 'abs');
                     if (substr($uri, strlen($uri) - 1) === '/' && $modx->resource->ContentType->get('mime_type') == 'text/html') {
                         /* if Resource is HTML and ends with a /, use ~index.html for the filename */
                         $uri .= '~index.html';
