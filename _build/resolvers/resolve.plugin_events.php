@@ -7,6 +7,7 @@ if ($object && $pluginid= $object->get('id')) {
             if (isset($options['activatePlugin']) && !empty($options['activatePlugin'])) {
                 $events = array(
                     'OnSiteRefresh',
+                    'OnDocFormSave',
                     'OnBeforeSaveWebPageCache'
                 );
                 foreach ($events as $eventName) {
