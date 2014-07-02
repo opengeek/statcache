@@ -52,6 +52,20 @@ $properties = array(
         'options' => '',
         'value' => false,
     ),
+    array(
+        'name' => 'regenerate_on_save',
+        'desc' => 'Regenerate an existing static file when a Resource is saved in the manager.',
+        'type' => 'combo-boolean',
+        'options' => '',
+        'value' => false,
+    ),
+    array(
+        'name' => 'regenerate_useragent',
+        'desc' => 'The User-Agent HTTP header to send when regenerating static files. Your web server should be configured to not serve the static files when the User-Agent equals the value specified here.',
+        'type' => 'textfield',
+        'options' => '',
+        'value' => 'MODX RegenCache',
+    ),
 );
 
 return $properties;

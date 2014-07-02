@@ -49,7 +49,7 @@ switch ($modx->event->name) {
             $regenQuery->prepare()->execute();
             $resources = $regenQuery->stmt->fetchAll(PDO::FETCH_COLUMN);
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_USERAGENT, 'MODX RegenCache');
+            curl_setopt($curl, CURLOPT_USERAGENT, $modx->getOption('regenerate_useragent', $scriptProperties, 'MODX RegenCache'));
             curl_setopt($curl, CURLOPT_FAILONERROR, false);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -120,6 +120,45 @@ switch ($modx->event->name) {
             /* attempt to write the complete Resource output to the static file */
             if (!$modx->cacheManager->writeFile($statcacheFile, $modx->resource->_output)) {
                 $modx->log(modX::LOG_LEVEL_ERROR, "Error caching output from Resource {$modx->resource->get('id')} to static file {$statcacheFile}", '', __FUNCTION__, __FILE__, __LINE__);
+            }
+        }
+        break;
+    case 'OnDocFormSave':
+        if (empty($reloadOnly) && $modx->getOption('regenerate_on_save', $scriptProperties, true) && $resource->get('cacheable') && $resource->get('published')) {
+            /* Write a new static version of the file (if it already exists) when changes are saved */
+            $statcacheFile = $resource->Context->getOption('statcache_path', MODX_BASE_PATH . 'statcache', $scriptProperties);
+            if ($resource->get('id') === (integer)$resource->Context->getOption('site_start', $modx->getOption('site_start', null, 1), $scriptProperties)) {
+                /* use ~index.html to represent the site_start Resource */
+                $statcacheFile .= MODX_BASE_URL . '~index.html';
+            } else {
+                /* generate an absolute URI representation of the Resource to append to the statcache_path */
+                $uri = $modx->makeUrl($resource->get('id'), $resource->get('context_key'), '', 'abs');
+                if (strpos($uri, $resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')) === 0) {
+                    $uri = substr($uri, strlen($resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')));
+                }
+                if (substr($uri, strlen($uri) - 1) === '/' && $resource->ContentType->get('mime_type') == 'text/html') {
+                    /* if Resource is HTML and ends with a /, use ~index.html for the filename */
+                    $uri .= '~index.html';
+                }
+                $statcacheFile .= $uri;
+            }
+            if (is_readable($statcacheFile)) {
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_USERAGENT, $modx->getOption('regenerate_useragent', $scriptProperties, 'MODX RegenCache'));
+                curl_setopt($curl, CURLOPT_FAILONERROR, false);
+                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_NOBODY, true);
+                $url = $modx->makeUrl($resource->get('id'), $resource->get('context_key'), '', 'full');
+                if (!empty($url)) {
+                    $modx->log(modX::LOG_LEVEL_INFO, "Requesting Resource at {$url}");
+                    curl_setopt($curl, CURLOPT_URL, $url);
+                    curl_exec($curl);
+                    $modx->log(modX::LOG_LEVEL_INFO, "Updated cache for resource at {$url}");
+                }
+                curl_close($curl);
+            } else {
+                $modx->log(modX::LOG_LEVEL_WARN, "No existing static cache file at {$statcacheFile}");
             }
         }
         break;

@@ -1,5 +1,8 @@
 Changelog for statcache.
 
+- Add single Resource regeneration OnDocFormSave
+- Add regenerate_useragent property
+
 statcache 1.3.0-pl (July 2, 2013)
 ====================================
 - Add regenerate property for replacing static files vs. removing
