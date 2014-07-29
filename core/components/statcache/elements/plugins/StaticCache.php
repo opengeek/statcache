@@ -160,6 +160,58 @@ switch ($modx->event->name) {
             } else {
                 $modx->log(modX::LOG_LEVEL_WARN, "No existing static cache file at {$statcacheFile}");
             }
+        } elseif (empty($reloadOnly) && ($resource->get('published') === false || $resource->get('deleted') === true)) {
+            /* delete a representation if it is unpublished or deleted */
+            $statcacheFile = $resource->Context->getOption('statcache_path', MODX_BASE_PATH . 'statcache', $scriptProperties);
+            if ($resource->get('id') === (integer)$resource->Context->getOption('site_start', $modx->getOption('site_start', null, 1), $scriptProperties)) {
+                /* use ~index.html to represent the site_start Resource */
+                $statcacheFile .= MODX_BASE_URL . '~index.html';
+            } else {
+                /* generate an absolute URI representation of the Resource to append to the statcache_path */
+                $uri = $modx->makeUrl($resource->get('id'), $resource->get('context_key'), '', 'abs');
+                if (strpos($uri, $resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')) === 0) {
+                    $uri = substr($uri, strlen($resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')));
+                }
+                if (substr($uri, strlen($uri) - 1) === '/' && $resource->ContentType->get('mime_type') == 'text/html') {
+                    /* if Resource is HTML and ends with a /, use ~index.html for the filename */
+                    $uri .= '~index.html';
+                }
+                $statcacheFile .= $uri;
+            }
+            if (is_readable($statcacheFile)) {
+                if (@unlink($statcacheFile) === false) {
+                    $modx->log(modX::LOG_LEVEL_ERROR, "Error removing static file {$statcacheFile}", '', "statcache [{$modx->event->name}]");
+                } else {
+                    $modx->log(modX::LOG_LEVEL_INFO, "Removed static file {$statcacheFile}", '', "statcache [{$modx->event->name}]");
+                }
+            }
+        }
+        break;
+    case 'OnResourceDelete':
+    case 'OnDocUnPublished':
+        /* delete a representation if it is unpublished or deleted */
+        $statcacheFile = $resource->Context->getOption('statcache_path', MODX_BASE_PATH . 'statcache', $scriptProperties);
+        if ($resource->get('id') === (integer)$resource->Context->getOption('site_start', $modx->getOption('site_start', null, 1), $scriptProperties)) {
+            /* use ~index.html to represent the site_start Resource */
+            $statcacheFile .= MODX_BASE_URL . '~index.html';
+        } else {
+            /* generate an absolute URI representation of the Resource to append to the statcache_path */
+            $uri = $modx->makeUrl($resource->get('id'), $resource->get('context_key'), '', 'abs');
+            if (strpos($uri, $resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')) === 0) {
+                $uri = substr($uri, strlen($resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')));
+            }
+            if (substr($uri, strlen($uri) - 1) === '/' && $resource->ContentType->get('mime_type') == 'text/html') {
+                /* if Resource is HTML and ends with a /, use ~index.html for the filename */
+                $uri .= '~index.html';
+            }
+            $statcacheFile .= $uri;
+        }
+        if (is_readable($statcacheFile)) {
+            if (@unlink($statcacheFile) === false) {
+                $modx->log(modX::LOG_LEVEL_ERROR, "Error removing static file {$statcacheFile}", '', "statcache [{$modx->event->name}]");
+            } else {
+                $modx->log(modX::LOG_LEVEL_INFO, "Removed static file {$statcacheFile}", '', "statcache [{$modx->event->name}]");
+            }
         }
         break;
 }

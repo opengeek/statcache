@@ -1,5 +1,6 @@
 Changelog for statcache.
 
+- Remove static file when Resource is deleted/unpublished
 - Add single Resource regeneration OnDocFormSave
 - Add regenerate_useragent property
 
