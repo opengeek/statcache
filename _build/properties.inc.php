@@ -80,6 +80,13 @@ $properties = array(
         'options' => '',
         'value' => false,
     ),
+    array(
+        'name' => 'contexts',
+        'desc' => 'If specified and non-empty, only cache Resources in the specified Contexts. Accepts a comma-delimited list of Context keys.',
+        'type' => 'textfield',
+        'options' => '',
+        'value' => '',
+    ),
 );
 
 return $properties;
