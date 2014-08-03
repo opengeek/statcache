@@ -66,6 +66,20 @@ $properties = array(
         'options' => '',
         'value' => 'MODX RegenCache',
     ),
+    array(
+        'name' => 'use_url_scheme',
+        'desc' => 'If enabled, includes the url_scheme (without the ://) as part of the `statcache_path`. Useful for sites using multiple Contexts for sub-domains or multiple domains. NOTE: using this requires changes to your web server rewrites rules.',
+        'type' => 'combo-boolean',
+        'options' => '',
+        'value' => false,
+    ),
+    array(
+        'name' => 'use_http_host',
+        'desc' => 'If enabled, includes the http_host as part of the `statcache_path`. Useful for sites using multiple Contexts for sub-domains or multiple domains. NOTE: using this requires changes to your web server rewrites rules.',
+        'type' => 'combo-boolean',
+        'options' => '',
+        'value' => false,
+    ),
 );
 
 return $properties;

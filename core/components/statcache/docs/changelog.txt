@@ -1,5 +1,6 @@
 Changelog for statcache.
 
+- Add use_url_scheme and use_http_host properties
 - Remove static file when Resource is deleted/unpublished
 - Add single Resource regeneration OnDocFormSave
 - Add regenerate_useragent property

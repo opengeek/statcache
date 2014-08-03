@@ -64,7 +64,14 @@ class StatCache {
             }
         }
 
-        return $path . $uri;
+        if ($this->getOption('use_url_scheme', false)) {
+            $path .= '/' . str_replace('://', '', $resource->Context->getOption('url_scheme'));
+        }
+        if ($this->getOption('use_http_host', false)) {
+            $path = rtrim($path, '/') . '/' . $resource->Context->getOption('http_host');
+        }
+
+        return $path . '/' . ltrim($uri, '/');
     }
 
     private function __construct(modX $modx, array $options = array()) {
