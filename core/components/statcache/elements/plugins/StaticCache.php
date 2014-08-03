@@ -1,4 +1,22 @@
 <?php
+/*
+ * This file is part of the statcache package.
+ *
+ * Copyright (c) Jason Coward <jason@opengeek.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * @var modX $modx
+ * @var array $scriptProperties
+ *
+ * @var
+ */
+
+require_once MODX_CORE_PATH . 'components/statcache/lib/StatCache.php';
+
 switch ($modx->event->name) {
     case 'OnSiteRefresh':
         if (!empty($regenerate)) {
@@ -104,19 +122,21 @@ switch ($modx->event->name) {
                 break;
             }
             /* build the path/filename for writing the static representation */
-            $statcacheFile = $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache');
-            if ($modx->resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
-                /* use ~index.html to represent the site_start Resource */
-                $statcacheFile .= MODX_BASE_URL . '~index.html';
-            } else {
-                /* generate an absolute URI representation of the Resource to append to the statcache_path */
-                $uri = $modx->makeUrl($modx->resource->get('id'), '', '', 'abs');
-                if (substr($uri, strlen($uri) - 1) === '/' && $modx->resource->ContentType->get('mime_type') == 'text/html') {
-                    /* if Resource is HTML and ends with a /, use ~index.html for the filename */
-                    $uri .= '~index.html';
-                }
-                $statcacheFile .= $uri;
-            }
+//            $statcacheFile = $modx->getOption('statcache_path', $scriptProperties, MODX_BASE_PATH . 'statcache');
+//            if ($modx->resource->get('id') === (integer) $modx->getOption('site_start', $scriptProperties, 1)) {
+//                /* use ~index.html to represent the site_start Resource */
+//                $statcacheFile .= MODX_BASE_URL . '~index.html';
+//            } else {
+//                /* generate an absolute URI representation of the Resource to append to the statcache_path */
+//                $uri = $modx->makeUrl($modx->resource->get('id'), '', '', 'abs');
+//                if (substr($uri, strlen($uri) - 1) === '/' && $modx->resource->ContentType->get('mime_type') == 'text/html') {
+//                    /* if Resource is HTML and ends with a /, use ~index.html for the filename */
+//                    $uri .= '~index.html';
+//                }
+//                $statcacheFile .= $uri;
+//            }
+            $statcacheFile = StatCache::getInstance($modx, $scriptProperties)->getStaticPath($modx->resource, $scriptProperties);
+
             /* attempt to write the complete Resource output to the static file */
             if (!$modx->cacheManager->writeFile($statcacheFile, $modx->resource->_output)) {
                 $modx->log(modX::LOG_LEVEL_ERROR, "Error caching output from Resource {$modx->resource->get('id')} to static file {$statcacheFile}", '', __FUNCTION__, __FILE__, __LINE__);
@@ -126,22 +146,7 @@ switch ($modx->event->name) {
     case 'OnDocFormSave':
         if (empty($reloadOnly) && $modx->getOption('regenerate_on_save', $scriptProperties, true) && $resource->get('cacheable') && $resource->get('published')) {
             /* Write a new static version of the file (if it already exists) when changes are saved */
-            $statcacheFile = $resource->Context->getOption('statcache_path', MODX_BASE_PATH . 'statcache', $scriptProperties);
-            if ($resource->get('id') === (integer)$resource->Context->getOption('site_start', $modx->getOption('site_start', null, 1), $scriptProperties)) {
-                /* use ~index.html to represent the site_start Resource */
-                $statcacheFile .= MODX_BASE_URL . '~index.html';
-            } else {
-                /* generate an absolute URI representation of the Resource to append to the statcache_path */
-                $uri = $modx->makeUrl($resource->get('id'), $resource->get('context_key'), '', 'abs');
-                if (strpos($uri, $resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')) === 0) {
-                    $uri = substr($uri, strlen($resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')));
-                }
-                if (substr($uri, strlen($uri) - 1) === '/' && $resource->ContentType->get('mime_type') == 'text/html') {
-                    /* if Resource is HTML and ends with a /, use ~index.html for the filename */
-                    $uri .= '~index.html';
-                }
-                $statcacheFile .= $uri;
-            }
+            $statcacheFile = StatCache::getInstance($modx, $scriptProperties)->getStaticPath($resource, $scriptProperties);
             if (is_readable($statcacheFile)) {
                 $curl = curl_init();
                 curl_setopt($curl, CURLOPT_USERAGENT, $modx->getOption('regenerate_useragent', $scriptProperties, 'MODX RegenCache'));
@@ -162,22 +167,7 @@ switch ($modx->event->name) {
             }
         } elseif (empty($reloadOnly) && ($resource->get('published') === false || $resource->get('deleted') === true)) {
             /* delete a representation if it is unpublished or deleted */
-            $statcacheFile = $resource->Context->getOption('statcache_path', MODX_BASE_PATH . 'statcache', $scriptProperties);
-            if ($resource->get('id') === (integer)$resource->Context->getOption('site_start', $modx->getOption('site_start', null, 1), $scriptProperties)) {
-                /* use ~index.html to represent the site_start Resource */
-                $statcacheFile .= MODX_BASE_URL . '~index.html';
-            } else {
-                /* generate an absolute URI representation of the Resource to append to the statcache_path */
-                $uri = $modx->makeUrl($resource->get('id'), $resource->get('context_key'), '', 'abs');
-                if (strpos($uri, $resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')) === 0) {
-                    $uri = substr($uri, strlen($resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')));
-                }
-                if (substr($uri, strlen($uri) - 1) === '/' && $resource->ContentType->get('mime_type') == 'text/html') {
-                    /* if Resource is HTML and ends with a /, use ~index.html for the filename */
-                    $uri .= '~index.html';
-                }
-                $statcacheFile .= $uri;
-            }
+            $statcacheFile = StatCache::getInstance($modx, $scriptProperties)->getStaticPath($resource, $scriptProperties);
             if (is_readable($statcacheFile)) {
                 if (@unlink($statcacheFile) === false) {
                     $modx->log(modX::LOG_LEVEL_ERROR, "Error removing static file {$statcacheFile}", '', "statcache [{$modx->event->name}]");
@@ -190,22 +180,7 @@ switch ($modx->event->name) {
     case 'OnResourceDelete':
     case 'OnDocUnPublished':
         /* delete a representation if it is unpublished or deleted */
-        $statcacheFile = $resource->Context->getOption('statcache_path', MODX_BASE_PATH . 'statcache', $scriptProperties);
-        if ($resource->get('id') === (integer)$resource->Context->getOption('site_start', $modx->getOption('site_start', null, 1), $scriptProperties)) {
-            /* use ~index.html to represent the site_start Resource */
-            $statcacheFile .= MODX_BASE_URL . '~index.html';
-        } else {
-            /* generate an absolute URI representation of the Resource to append to the statcache_path */
-            $uri = $modx->makeUrl($resource->get('id'), $resource->get('context_key'), '', 'abs');
-            if (strpos($uri, $resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')) === 0) {
-                $uri = substr($uri, strlen($resource->Context->getOption('url_scheme') . $resource->Context->getOption('http_host')));
-            }
-            if (substr($uri, strlen($uri) - 1) === '/' && $resource->ContentType->get('mime_type') == 'text/html') {
-                /* if Resource is HTML and ends with a /, use ~index.html for the filename */
-                $uri .= '~index.html';
-            }
-            $statcacheFile .= $uri;
-        }
+        $statcacheFile = StatCache::getInstance($modx, $scriptProperties)->getStaticPath($resource, $scriptProperties);
         if (is_readable($statcacheFile)) {
             if (@unlink($statcacheFile) === false) {
                 $modx->log(modX::LOG_LEVEL_ERROR, "Error removing static file {$statcacheFile}", '', "statcache [{$modx->event->name}]");

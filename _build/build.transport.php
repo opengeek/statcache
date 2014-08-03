@@ -57,6 +57,10 @@ $vehicle = $builder->createVehicle($object, array(
     xPDOTransport::UPDATE_OBJECT => true,
     xPDOTransport::UNIQUE_KEY => 'name',
 ));
+$vehicle->resolve('file',array(
+    'source' => $sources['source_core'],
+    'target' => "return MODX_CORE_PATH . 'components/';",
+));
 $vehicle->resolve('php',array(
     'source' => $sources['resolvers'] . 'resolve.plugin_events.php',
 ));
