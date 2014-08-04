@@ -7,7 +7,10 @@ if ($object && $pluginid= $object->get('id')) {
             if (isset($options['activatePlugin']) && !empty($options['activatePlugin'])) {
                 $events = array(
                     'OnSiteRefresh',
-                    'OnBeforeSaveWebPageCache'
+                    'OnBeforeSaveWebPageCache',
+                    'OnDocFormSave',
+                    'OnDocUnPublished',
+                    'OnResourceDelete'
                 );
                 foreach ($events as $eventName) {
                     $event = $object->xpdo->getObject('modEvent',array('name' => $eventName));

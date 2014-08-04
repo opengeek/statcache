@@ -1,5 +1,13 @@
 Changelog for statcache.
 
+statcache 1.4.0-pl (August 3, 2014)
+====================================
+- Limit statcache to Resources with specified context keys
+- Add use_url_scheme and use_http_host properties
+- Remove static file when Resource is deleted/unpublished
+- Add single Resource regeneration OnDocFormSave
+- Add regenerate_useragent property
+
 statcache 1.3.0-pl (July 2, 2013)
 ====================================
 - Add regenerate property for replacing static files vs. removing

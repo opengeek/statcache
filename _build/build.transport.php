@@ -11,7 +11,7 @@ set_time_limit(0);
 /* set package info */
 define('PKG_NAME', 'statcache');
 define('PKG_NAME_LOWER', strtolower(PKG_NAME));
-define('PKG_VERSION', '1.3.0');
+define('PKG_VERSION', '1.4.0');
 define('PKG_RELEASE', 'pl');
 
 /* define sources */
@@ -56,6 +56,10 @@ $vehicle = $builder->createVehicle($object, array(
     xPDOTransport::PRESERVE_KEYS => false,
     xPDOTransport::UPDATE_OBJECT => true,
     xPDOTransport::UNIQUE_KEY => 'name',
+));
+$vehicle->resolve('file',array(
+    'source' => $sources['source_core'],
+    'target' => "return MODX_CORE_PATH . 'components/';",
 ));
 $vehicle->resolve('php',array(
     'source' => $sources['resolvers'] . 'resolve.plugin_events.php',
