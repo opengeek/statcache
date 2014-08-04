@@ -1,5 +1,7 @@
 Changelog for statcache.
 
+statcache 1.4.0-pl (August 3, 2014)
+====================================
 - Limit statcache to Resources with specified context keys
 - Add use_url_scheme and use_http_host properties
 - Remove static file when Resource is deleted/unpublished
