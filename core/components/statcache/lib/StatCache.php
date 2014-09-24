@@ -39,7 +39,11 @@ class StatCache {
             return $default;
         }
     }
-
+    /**
+     * @param (Object modResource) $resource
+     * @param (Array) $options
+     *  
+     */
     public function getStaticPath($resource, array $options = array()) {
         if (!$resource instanceof modResource) {
             return false;
@@ -61,6 +65,8 @@ class StatCache {
             if (substr($uri, strlen($uri) - 1) === '/' && $resource->ContentType->get('mime_type') == 'text/html') {
                 /* if Resource is HTML and ends with a /, use ~index.html for the filename */
                 $uri .= '~index.html';
+            } else if ($resource->ContentType->get('mime_type') == 'text/html' && $resource->ContentType->get('file_extensions') == '' ) {
+                $uri .= '~.html';
             }
         }
 
