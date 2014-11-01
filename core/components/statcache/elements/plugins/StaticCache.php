@@ -100,7 +100,8 @@ switch ($modx->event->name) {
                 array(
                     'deleteTop' => false,
                     'skipDirs' => false,
-                    'extensions' => array()
+                    'extensions' => array(),
+                    'delete_exclude_items' => explode(',', $modx->getOption('statcache_delete_exclude', $scriptProperties, ''))
                 )
             );
         }
