@@ -144,7 +144,7 @@ switch ($modx->event->name) {
         }
         break;
     case 'OnDocFormSave':
-        if (empty($contexts) || in_array($modx->resource->get('context_key'), $contexts)) {
+        if (empty($contexts) || in_array($resource->get('context_key'), $contexts)) {
             if (empty($reloadOnly) && $modx->getOption('regenerate_on_save', $scriptProperties, true) && $resource->get('cacheable') && $resource->get('published')) {
                 /* Write a new static version of the file (if it already exists) when changes are saved */
                 $statcacheFile = StatCache::getInstance($modx, $scriptProperties)->getStaticPath($resource, $scriptProperties);
