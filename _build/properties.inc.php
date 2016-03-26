@@ -87,6 +87,13 @@ $properties = array(
         'options' => '',
         'value' => '',
     ),
+    array(
+        'name' => 'minifyHTML',
+        'desc' => 'If enabled, minifies HTML output before cacheing to the filesystem.',
+        'type' => 'combo-boolean',
+        'options' => '',
+        'value' => false,
+    ),
 );
 
 return $properties;

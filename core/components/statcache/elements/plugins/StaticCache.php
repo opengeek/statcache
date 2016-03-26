@@ -16,6 +16,7 @@
  */
 
 require_once MODX_CORE_PATH . 'components/statcache/lib/StatCache.php';
+require_once MODX_CORE_PATH . 'components/statcache/lib/phpwee/phpwee.php';
 
 if (!empty($contexts)) {
     $contexts = explode(',', $contexts);
@@ -137,7 +138,9 @@ switch ($modx->event->name) {
                 $statcacheFile = StatCache::getInstance($modx, $scriptProperties)->getStaticPath($modx->resource, $scriptProperties);
 
                 /* attempt to write the complete Resource output to the static file */
-                if (!$modx->cacheManager->writeFile($statcacheFile, $modx->resource->_output)) {
+                $output = (!empty($minifyHTML)) ? trim(PHPWee\Minify::html($modx->resource->_output)) : $modx->resource->_output;
+                $modx->log(modX::LOG_LEVEL_ERROR, "statcacheFile:$statcacheFile");
+                if (!$modx->cacheManager->writeFile($statcacheFile, $output)) {
                     $modx->log(modX::LOG_LEVEL_ERROR, "Error caching output from Resource {$modx->resource->get('id')} to static file {$statcacheFile}", '', __FUNCTION__, __FILE__, __LINE__);
                 }
             }
