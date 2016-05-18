@@ -44,7 +44,8 @@ class StatCache {
         if (!$resource instanceof modResource) {
             return false;
         }
-
+        
+        if ($resource->Context->config === null) $resource->Context->prepare();
         $path = $resource->Context->getOption('statcache_path', MODX_BASE_PATH . 'statcache', $options);
 
         /* generate an absolute URI representation of the Resource to append to the path */
